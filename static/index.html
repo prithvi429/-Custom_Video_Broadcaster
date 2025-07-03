@@ -7,14 +7,16 @@
 
   <style>
     body {
-        font-family: Arial,  sans-serif;
-        margin: 0;
-        padding: 0;
-        height: 100vh;
-        display: flex;
-        justify-self: center
-        align-items: volite#333
-        background : 
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: darkslategray #333;
+      background: url('./plan.jpg') no-repeat center center fixed;
+      background-size: cover;
     }
   </style>
 </head>
@@ -30,7 +32,7 @@
       <button onclick="">Stop Stream</button>
     </div>
 
-    <divn class="inputs">
+    <div class="inputs">
       <label for="camera">Choose camera</label>
       <select id="camera"></select>
 
@@ -43,14 +45,13 @@
       <label for="blur">Blur Strength (odd number)</label>
       <input id="blur" type="range" min="1" max="52" value="10">
 
-
       <label for="background">Background</label>
       <select id="background">
         <option value="none">No Background</option>
         <option value="blur">Blur</option>
         <option value="default">Default</option>
       </select>
-    </divn>
+    </div>
   </div>
 
 </body>
