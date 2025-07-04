@@ -1,59 +1,295 @@
 <!DOCTYPE html>
-
-<html>
-
+<html lang="en">
 <head>
-  <title>Video Broadcast</title>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Broadcast Studio</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #3a0ca3;
+      --secondary: #f72585;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --gray: #6c757d;
+      --success: #4cc9f0;
+    }
+    
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      height: 100vh;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      color: darkslategray #333;
-      background: url('./plan.jpg') no-repeat center center fixed;
+      color: var(--dark);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       background-size: cover;
+      background-attachment: fixed;
+    }
+
+    .container {
+      width: 85%;
+      max-width: 800px;
+      padding: 2.5rem;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.95);
+      text-align: center;
+      position: relative;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      overflow: hidden;
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+      z-index: -1;
+    }
+
+    h1 {
+      color: var(--primary-dark);
+      margin-bottom: 1.5rem;
+      font-weight: 700;
+      font-size: 2rem;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      min-width: 140px;
+    }
+
+    button:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button:nth-child(2) {
+      background-color: var(--success);
+    }
+
+    button:nth-child(2):hover {
+      background-color: #3aa8d8;
+    }
+
+    button:nth-child(3) {
+      background-color: var(--secondary);
+    }
+
+    button:nth-child(3):hover {
+      background-color: #e5177e;
+    }
+
+    .control-panel {
+      background: rgba(248, 249, 250, 0.8);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--gray);
+      font-size: 0.9rem;
+    }
+
+    select, input[type="number"] {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 8px;
+      border: 1px solid #ced4da;
+      background-color: white;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+    }
+
+    select:focus, input[type="number"]:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 8px;
+      -webkit-appearance: none;
+      background: #e9ecef;
+      border-radius: 4px;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      background: var(--primary);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background: var(--primary-dark);
+      transform: scale(1.1);
+    }
+
+    .status {
+      margin-top: 1.5rem;
+      padding: 0.75rem;
+      border-radius: 8px;
+      background: rgba(76, 201, 240, 0.1);
+      color: var(--dark);
+      font-weight: 500;
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        width: 95%;
+        padding: 1.5rem;
+      }
+      
+      .button-group {
+        flex-direction: column;
+      }
+      
+      button {
+        width: 100%;
+      }
     }
   </style>
 </head>
 
 <body>
+  <div class="container">
+    <h1>Video Broadcast Studio</h1>
 
-  <img src="./static/KNA.jpg">
-
-  <div>
-    <div class="button">
-      <button onclick="">List Devices</button>
-      <button onclick="">Start Stream</button>
-      <button onclick="">Stop Stream</button>
+    <div class="controls">
+        
+        <div class="button-group">
+      <button onclick="listDevices()">List Devices</button>
+      <button onclick="startStream()">Start Stream</button>
+      <button onclick="stopStream()">Stop Stream</button>
     </div>
 
-    <div class="inputs">
-      <label for="camera">Choose camera</label>
-      <select id="camera"></select>
+    <div class="control-panel">
+      <div class="form-group">
+        <label for="camera">Camera</label>
+        <select id="camera">
+          <option value="" disabled selected>Select a camera</option>
+        </select>
+      </div>
 
-      <label for="fps">FPS</label>
-      <select id="fps"></select>
+      <div class="form-group">
+        <label for="fps">Frame Rate (FPS)</label>
+        <input id="fps" type="number" min="1" max="60" value="24">
+      </div>
 
-      <label for="fps">FPS</label>
-      <input id="fps" type="number" min="1" max="60" value="15">
+      <div class="form-group">
+        <label for="blur">Blur Strength: <span id="blur-value">10</span></label>
+        <input id="blur" type="range" min="1" max="52" value="10" step="2" oninput="updateBlurValue()">
+      </div>
 
-      <label for="blur">Blur Strength (odd number)</label>
-      <input id="blur" type="range" min="1" max="52" value="10">
+      <div class="form-group">
+        <label for="background">Background Effect</label>
+        <select id="background">
+          <option value="none">No Background</option>
+          <option value="blur">Blur Effect</option>
+          <option value="default" selected>Default Background</option>
+          <option value="virtual">Virtual Background</option>
+        </select>
+      </div>
 
-      <label for="background">Background</label>
-      <select id="background">
-        <option value="none">No Background</option>
-        <option value="blur">Blur</option>
-        <option value="default">Default</option>
-      </select>
+    </div>
+    
+    
+    
+
+    <div class="status" id="status">
+      Ready to broadcast
+    </div>
     </div>
   </div>
 
+  <script>
+    function updateBlurValue() {
+      document.getElementById('blur-value').textContent = document.getElementById('blur').value;
+    }
+    
+    // Placeholder functions for button actions
+    function listDevices() {
+      const status = document.getElementById('status');
+      status.style.display = 'block';
+      status.textContent = 'Listing available devices...';
+      // Simulate async operation
+      setTimeout(() => {
+        status.textContent = 'Devices listed successfully';
+      }, 1500);
+    }
+    
+    function startStream() {
+      const status = document.getElementById('status');
+      status.style.display = 'block';
+      status.textContent = 'Starting stream...';
+      // Simulate async operation
+      setTimeout(() => {
+        status.textContent = 'Stream is live!';
+        status.style.background = 'rgba(76, 201, 240, 0.2)';
+      }, 2000);
+    }
+    
+    function stopStream() {
+      const status = document.getElementById('status');
+      status.style.display = 'block';
+      status.textContent = 'Stopping stream...';
+      // Simulate async operation
+      setTimeout(() => {
+        status.textContent = 'Stream stopped';
+        status.style.background = 'rgba(242, 153, 74, 0.2)';
+      }, 1000);
+    }
+  </script>
 </body>
-
 </html>
