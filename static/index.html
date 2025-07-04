@@ -209,7 +209,7 @@
     <div class="controls">
         
         <div class="button-group">
-      <button onclick="listDevices()">List Devices</button>
+      <button onclick="getDevices()">List Devices</button>
       <button onclick="startStream()">Start Stream</button>
       <button onclick="stopStream()">Stop Stream</button>
     </div>
@@ -259,15 +259,33 @@
     }
     
     // Placeholder functions for button actions
-    function listDevices() {
-      const status = document.getElementById('status');
-      status.style.display = 'block';
-      status.textContent = 'Listing available devices...';
-      // Simulate async operation
-      setTimeout(() => {
-        status.textContent = 'Devices listed successfully';
-      }, 1500);
-    }
+   function getDevices() {
+  fetch('/devices')
+    .then(response => response.json())
+    .then(data => {
+      const select = document.getElementById('camera');
+      select.innerHTML = '';
+
+      data.forEach(device => {
+        select.innerHTML += `<option value="${device.id}">${device.name}</option>`;
+      });
+
+      getDevices(); // Call listDevices after populating devices
+    })
+    .catch(error => {
+      console.error('Error fetching devices:', error);
+    });
+}
+
+function getDevices() {
+  const status = document.getElementById('status');
+  status.style.display = 'block';
+  status.textContent = 'Listing available devices...';
+  // Simulate async operation
+  setTimeout(() => {
+    status.textContent = 'Devices listed successfully';
+  }, 1500);
+}
     
     function startStream() {
       const status = document.getElementById('status');
