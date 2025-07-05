@@ -24,6 +24,7 @@ def start_stream(
     blur_strength: int = Query(21),
     background: str = Query("none")
 ):
+    streaming.update_stream_config()
     # In real use, you'd launch a stream with these params
     return {
         "message": "Stream started",
