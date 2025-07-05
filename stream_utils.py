@@ -1,22 +1,35 @@
 import cv2
 from typing import Optional, List, Dict
 import pyvirtualcam
+from engine import CustomerSegmentationWithYOLO
+import torch
 
-class Streaming:
+
+class Streaming(CustomerSegmentationWithYOLO):
     def __init__(
         self,
         in_source: Optional[int] = None,
         out_source: Optional[str] = None,
         fps: Optional[int] = None,
         blur_strength: Optional[int] = None,
+        cam_fps: int = 15,
         background: str = "none"
     ):
+        super().__init__()
         self.input_source = in_source
         self.out_source = out_source
         self.fps = fps
         self.blur_strength = blur_strength
         self.background = background
-        self.running =False
+        self.running = False
+        self.original_fps = fps
+
+        self.device = (
+            torch.device("cuda") if torch.cuda.is_available()
+            else torch.device("mps") if torch.backends.mps.is_available()
+            else torch.device("cpu")
+        )
+
 
     def update_stream_config(
         self,
@@ -84,8 +97,24 @@ class Streaming:
                     break
 
                 if frame_idx % frame_interval == 0:
-                    # Here you can process the frame, apply mask, blur, etc.
-                    result_frame = frame  # For now, just use the original frame
+                    results = self.model.predict(source=frame, save=False, stream=True, verbose=False, device=self.device)
+                    mask = self.generate_mask_from_result(results)
+
+                    if mask is not None:
+                        if self.background == "blur":
+                            result_frame = self.apply_blur_with_result(frame, mask, blur_strength=self.blur_strength)
+                        elif self.background == "none":
+                            result_frame = self.apply_black_background(frame, mask)
+                        elif self.background == "default":
+                            result_frame = self.apply_custom_background(frame, mask)
+                        elif self.background == "virtual":
+                            result_frame = self.apply_virtual_background(frame, mask)
+                        else:
+                            result_frame = frame  # fallback
+                    else:
+                        result_frame = frame  # no mask available, use raw frame
+
+                    # Send to virtual camera
                     cam.send(cv2.cvtColor(result_frame, cv2.COLOR_BGR2RGB))
                     cam.sleep_until_next_frame()
 

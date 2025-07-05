@@ -9,7 +9,7 @@ app = FastAPI()
 
 # Mount static files (e.g., your HTML + assets)
 app.mount("/static", StaticFiles(directory="static"), name="static")
-
+stream_thread =None
 # Global instance of your streamer
 streaming = Streaming()
 
@@ -56,5 +56,10 @@ def devices():
     return streaming.list_available_devices()
 
 
+@app.get("/favicon.ico")
+def favicon():
+    return FileResponse("static/favicon.ico")
+
+
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8002)
