@@ -284,13 +284,27 @@
     }
 
     function startStream() {
+      const source = document.getElementById('camera').value;
+      const fps = document.getElementById('fps').value;
+      const blur = document.getElementById('blur').value;
+      const background = document.getElementById('background').value;
       const status = document.getElementById('status');
+
       status.style.display = 'block';
       status.textContent = 'Starting stream...';
-      setTimeout(() => {
-        status.textContent = 'Stream is live!';
-        status.style.background = 'rgba(76, 201, 240, 0.2)';
-      }, 2000);
+
+      fetch(`/start?source=${source}&fps=${fps}&blur=${blur}&background=${background}`)
+        .then(() => {
+          setTimeout(() => {
+            status.textContent = 'Stream is live!';
+            status.style.background = 'rgba(76, 201, 240, 0.2)';
+          }, 2000);
+        })
+        .catch(error => {
+          status.textContent = 'Failed to start stream';
+          status.style.background = 'rgba(255, 0, 0, 0.2)';
+          console.error('Error starting stream:', error);
+        });
     }
 
     function stopStream() {
