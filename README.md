@@ -4,6 +4,10 @@ A professional, AI-powered video broadcasting platform for real-time background 
 
 ---
 
+![App Interface](static/Screenshot%202025-07-06%20022333.png)
+
+---
+
 ## ✨ Features
 - **Real-time person segmentation** using YOLOv8 for accurate subject detection.
 - **Multiple background effects:** blur, black, custom image, or virtual background.
