@@ -311,10 +311,18 @@
       const status = document.getElementById('status');
       status.style.display = 'block';
       status.textContent = 'Stopping stream...';
-      setTimeout(() => {
-        status.textContent = 'Stream stopped';
-        status.style.background = 'rgba(242, 153, 74, 0.2)';
-      }, 1000);
+
+      fetch('/stop')
+        .then(response => response.json())
+        .then(data => {
+          status.textContent = data.message;
+          status.style.background = 'rgba(242, 153, 74, 0.2)';
+        })
+        .catch(error => {
+          status.textContent = ' stopping stream';
+          status.style.background = 'rgba(255, 0, 0, 0.2)';
+          console.error('Stop stream error:', error);
+        });
     }
   </script>
 </body>

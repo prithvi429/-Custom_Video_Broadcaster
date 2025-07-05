@@ -45,6 +45,12 @@ def start_stream(
     }
 
 
+
+@app.get("/stop")
+def stop_stream():
+    return streaming.update_running_status()
+
+
 @app.get("/devices")
 def devices():
     return streaming.list_available_devices()

@@ -1,7 +1,6 @@
 import cv2
 from typing import Optional, List, Dict
 import pyvirtualcam
-from pyvirtualcam import PixelFormat
 
 class Streaming:
     def __init__(
@@ -48,6 +47,10 @@ class Streaming:
                 devices.append({"id": str(i), "name": f"Camera ({i})"})
                 cap.release()
         return devices
+    
+
+    def update_running_status(self,running_status = False):
+        self.running = running_status
 
     def stream_video(self):
         self.running = True
