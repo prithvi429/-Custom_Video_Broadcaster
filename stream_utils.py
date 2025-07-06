@@ -62,8 +62,9 @@ class Streaming(CustomerSegmentationWithYOLO):
         return devices
     
 
-    def update_running_status(self,running_status = False):
+    def update_running_status(self, running_status=False):
         self.running = running_status
+        return {"message": "Streaming stopped" if not running_status else "Streaming started"}
 
     def stream_video(self):
         self.running = True
@@ -102,7 +103,7 @@ class Streaming(CustomerSegmentationWithYOLO):
 
                     if mask is not None:
                         if self.background == "blur":
-                            result_frame = self.apply_blur_with_result(frame, mask, blur_strength=self.blur_strength)
+                            result_frame = self.apply_blur_with_mask(frame, mask, blur_strength=self.blur_strength)
                         elif self.background == "none":
                             result_frame = self.apply_black_background(frame, mask)
                         elif self.background == "default":

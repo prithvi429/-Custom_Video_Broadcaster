@@ -4,11 +4,14 @@ import numpy as np
 import torch
 
 class CustomerSegmentationWithYOLO():
-    def __init__(self, erode_size=5, erode_intensity=2):
+    def __init__(self, erode_size=5, erode_intensity=2, background_path='static/IMG-20250705-WA0006.jpg'):
         self.model = YOLO('yolov8n-seg.pt')
         self.erode_size = erode_size
         self.erode_intensity = erode_intensity
-        self.background_image = cv2.imread('static/IMG-20250705-WA0006.jpg')
+        self.background_image = cv2.imread(background_path)
+        if self.background_image is None:
+            print("[Warning] Background image not found, using black background.")
+            self.background_image = np.zeros((480, 640, 3), dtype=np.uint8)
 
     def generate_mask_from_result(self, results):
         for result in results:
@@ -36,6 +39,9 @@ class CustomerSegmentationWithYOLO():
                 kernel = np.ones((self.erode_size, self.erode_size), np.uint8)
                 eroded_mask = cv2.erode(people_mask.cpu().numpy(), kernel, iterations=self.erode_intensity)
 
+                if eroded_mask.sum() < 100:  # low pixel count means weak detection
+                    return None
+
                 return eroded_mask  # Already NumPy
 
         return None
@@ -56,7 +62,8 @@ class CustomerSegmentationWithYOLO():
         mask_3d = cv2.merge([mask, mask, mask])
 
         # Combine using the mask (keep original where mask is 255, blurred elsewhere)
-        result_frame = np.where(mask_3d == 255, frame, blurred_frame)
+        result_frame = self.apply_blur_with_mask(frame, mask, blur_strength=self.blur_strength)
+
 
         return result_frame
 
@@ -89,3 +96,7 @@ class CustomerSegmentationWithYOLO():
         result_frame = np.where(mask_3d == 255, frame, background_image)
 
         return result_frame
+
+    def apply_virtual_background(self, frame, mask):
+        # Just re-use the custom background logic
+        return self.apply_custom_background(frame, mask)
