@@ -63,6 +63,27 @@ This platform is ideal for:
 
 ---
 
+## 🛠️ Troubleshooting & Tips
+- **Camera not detected or not working?**
+  - Ensure your webcam is connected and not in use by another app.
+  - Try running as administrator or check your system's privacy/camera settings.
+  - Update your camera drivers if you see low-level errors in the logs.
+  - If you see OpenCV/driver errors, these are now suppressed to only show critical issues.
+- **Missing background image?**
+  - If the custom background image is missing, the app will use a black background and print a warning.
+- **Favicon and UI screenshot:**
+  - The web UI includes a favicon and a screenshot for a polished, professional look.
+- **Logging and error handling:**
+  - The backend suppresses verbose OpenCV logs and provides clear error messages for device and streaming issues.
+
+---
+
+## 🤝 Contributing & Support
+- Pull requests and suggestions are welcome! Please open an issue for bugs or feature requests.
+- For help, contact the maintainer or open a GitHub issue.
+
+---
+
 ## ❤️ Credits
 - [Ultralytics YOLO](https://github.com/ultralytics/ultralytics)
 - [pyvirtualcam](https://github.com/letmaik/pyvirtualcam)

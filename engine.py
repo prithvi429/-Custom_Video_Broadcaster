@@ -47,13 +47,21 @@ class CustomerSegmentationWithYOLO():
         return None
 
     def apply_blur_with_mask(self, frame, mask, blur_strength=21):
+        # If blur_strength is too low, skip blurring and return the original frame
+        if isinstance(blur_strength, tuple):
+            strength_val = blur_strength[0]
+        else:
+            strength_val = blur_strength
+        if strength_val <= 5:
+            return frame
+
         # Ensure blur_strength is odd
-        if blur_strength % 2 == 0:
-            blur_strength += 1
-        blur_strength = (blur_strength, blur_strength)
+        if strength_val % 2 == 0:
+            strength_val += 1
+        blur_kernel = (strength_val, strength_val)
 
         # Apply Gaussian blur to the whole frame
-        blurred_frame = cv2.GaussianBlur(frame, blur_strength, 0)
+        blurred_frame = cv2.GaussianBlur(frame, blur_kernel, 0)
 
         # Ensure mask is binary (0 or 255)
         mask = (mask > 0).astype(np.uint8) * 255
@@ -62,8 +70,7 @@ class CustomerSegmentationWithYOLO():
         mask_3d = cv2.merge([mask, mask, mask])
 
         # Combine using the mask (keep original where mask is 255, blurred elsewhere)
-        result_frame = self.apply_blur_with_mask(frame, mask, blur_strength=self.blur_strength)
-
+        result_frame = np.where(mask_3d == 255, frame, blurred_frame)
 
         return result_frame
 

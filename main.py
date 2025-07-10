@@ -5,6 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from stream_utils import Streaming
 import threading
 import cv2
+import os
 
 app = FastAPI()
 
@@ -14,8 +15,6 @@ stream_thread =None
 # Global instance of your streamer
 streaming = Streaming()
 
-# Set OpenCV log level to error to reduce verbosity
-cv2.utils.logging.setLogLevel(cv2.utils.logging.LOG_LEVEL_ERROR)
 
 @app.get("/")
 def serve_ui():
@@ -68,8 +67,11 @@ def devices():
 
 
 @app.get("/favicon.ico")
-def favicon():
-    return FileResponse("static/favicon.ico")
+async def favicon():
+    favicon_path = os.path.join("static", "favicon.ico")
+    if os.path.exists(favicon_path):
+        return FileResponse(favicon_path)
+    return FileResponse("static/IMG-20250705-WA0004.jpg")  # fallback or return 204/empty if you prefer
 
 
 if __name__ == "__main__":
